@@ -114,6 +114,7 @@ class AuthenticationViewModelTest {
         viewModel.handleEvent(AuthenticationEvent.Authenticate)
         val uiState = viewModel.uiState.value
         assert(uiState.isLoading)
+        xx
     }
 
 }
