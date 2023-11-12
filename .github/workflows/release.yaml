@@ -29,7 +29,7 @@ jobs:
        #2
        - name: Prepare Keystore variables
          run: |
-           echo "keystore_path=keystore/keystore.jks &>> local.properties
+           echo "keystore_path=keystore/keystore.jks" &>> local.properties
            echo "keystore_password=${{secrets.SIGNING_KEY_PASSWORD}}" &>> local.properties
            echo "keystore_key_alias=${{secrets.SIGNING_KEY_ALIAS}}" &>> local.properties
            echo "keystore_key_password=${{secrets.SIGNING_STORE_PASSWORD}}" &>> local.properties
