@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.konan.properties.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -7,16 +9,24 @@ android {
     namespace = "com.example.practicaljetpackcompose"
     compileSdk = 33
 
+    val properties = Properties().apply {
+        load(project.rootProject.file("local.properties").inputStream())
+    }
+
     signingConfigs {
         create("release") {
             /*storeFile = file("../keystore/compose_practical_keystore.jks")
             storePassword = "T@nawat!26"
             keyAlias = "ComposePractical"
             keyPassword = "T@nawat!26"*/
-            storeFile = file("../keystore/compose_practical_keystore.jks")
+  /*          storeFile = file("../keystore/compose_practical_keystore.jks")
             storePassword = System.getenv("SIGNING_STORE_PASSWORD")
             keyAlias = System.getenv("SIGNING_KEY_ALIAS")
-            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")*/
+            storeFile = file(properties.getProperty("keystore_path"))
+            storePassword = properties.getProperty("keystore_password")
+            keyAlias = properties.getProperty("keystore_key_alias")
+            keyPassword = properties.getProperty("keystore_key_password")
         }
     }
 
@@ -44,7 +54,7 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
