@@ -1,5 +1,10 @@
 platform-samples
 .gradle
-.idea
+app/build
 app/release
-/keystore/
+app/.DS_Store
+.DS_Store
+local.properties
+.idea
+
+
