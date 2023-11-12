@@ -22,7 +22,7 @@ jobs:
            ENCODED_STRING: ${{ secrets.SIGNING_KEY_STORE_BASE64 }}
  
          run: |
-           mkdir keystore
+           mkdir -p keystore
            echo $ENCODED_STRING > keystore/keystore-b64.txt
            base64 -d keystore/keystore-b64.txt > keystore/keystore.jks
            
