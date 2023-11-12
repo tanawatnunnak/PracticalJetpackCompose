@@ -2,4 +2,3 @@ platform-samples
 .gradle
 .idea
 app/release
-keystore
