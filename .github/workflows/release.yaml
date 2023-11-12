@@ -27,35 +27,22 @@ jobs:
            base64 -d keystore/keystore-b64.txt > keystore/keystore.jks
            
        #2
-       - name: Build Release apk
-         env:
-           SIGNING_KEY_STORE_PATH: "keystore/keystore.jks"
-           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-         run: ./gradlew assembleRelease
- 
-       - name: Build Release bundle
-         env:
-           SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
-           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
-         run: ./gradlew bundleRelease
-       #3
-       - name: Upload Release Build to Artifacts
+       - name: Prepare Keystore variables
+         run: |
+           echo "keystore_path=${GITHUB_WORKSPACE}/keystore/keystore.jks" &>> local.properties
+           echo "keystore_password=${{secrets.SIGNING_KEY_PASSWORD}}" &>> local.properties
+           echo "keystore_key_alias=${{secrets.SIGNING_KEY_ALIAS}}" &>> local.properties
+           echo "keystore_key_password=${{secrets.SIGNING_STORE_PASSWORD}}" &>> local.properties
+
+       - name: Grant execute permission for gradlew
+         run: chmod +x gradlew
+
+       - name: Build AAB with Gradle
+         run: ./gradlew :app:bundleRelease
+
+       - name: Update AAB to artifactory
          uses: actions/upload-artifact@v3
          with:
-           name: release-artifacts
-           paths: |
-             app/build/outputs/apk/release/
-             app/build/outputs/bundle/release/
-       #4      
-       - name: Create Github Release
-         uses: softprops/action-gh-release@v1
-         with:
-           generate_release_notes: true
-           prerelease: true
-           files: |
-             app/build/outputs/apk/release/app-release.apk
-             app/build/outputs/bundle/release/app-release.aab
+           name: release-app-bundle
+           path: app/build/outputs/
+           retention-days: 1
