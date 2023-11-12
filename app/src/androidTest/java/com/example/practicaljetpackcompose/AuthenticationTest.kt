@@ -21,7 +21,7 @@ class AuthenticationTest {
         }
         composeTestRule.onNodeWithText(
             InstrumentationRegistry.getInstrumentation()
-                .context.getString(
+                .targetContext.getString(
                     R.string.label_sign_in_to_account
                 )
         ).assertIsDisplayed()
@@ -35,15 +35,15 @@ class AuthenticationTest {
         composeTestRule
             .onNodeWithText(
             InstrumentationRegistry.getInstrumentation()
-                .context.getString(
-                    R.string.action_need_account
+                .targetContext.getString(
+                    R.string.action_already_have_account
                 )
         ).performClick()
 
         composeTestRule
             .onNodeWithText(
                 InstrumentationRegistry.getInstrumentation()
-                    .context.getString(
+                    .targetContext.getString(
                         R.string.label_sign_up_for_account
                     )
             ).assertIsDisplayed()

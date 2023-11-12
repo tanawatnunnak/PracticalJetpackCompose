@@ -7,6 +7,19 @@ android {
     namespace = "com.example.practicaljetpackcompose"
     compileSdk = 33
 
+    signingConfigs {
+        create("release") {
+            /*storeFile = file("../keystore/compose_practical_keystore.jks")
+            storePassword = "T@nawat!26"
+            keyAlias = "ComposePractical"
+            keyPassword = "T@nawat!26"*/
+            storeFile = file("../keystore/compose_practical_keystore.jks")
+            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+        }
+    }
+
     defaultConfig {
         applicationId = "com.example.practicaljetpackcompose"
         minSdk = 24
@@ -20,8 +33,17 @@ android {
         }
     }
 
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+        animationsDisabled = true
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
