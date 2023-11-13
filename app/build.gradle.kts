@@ -1,13 +1,70 @@
 import org.jetbrains.kotlin.konan.properties.Properties
+import com.android.build.gradle.internal.tasks.factory.dependsOn
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    jacoco
 }
+
+// Register the main JaCoCo task to later depend on the per-variant tasks
+val jacocoTestReport = tasks.register("jacocoTestReport")
+
+tasks.withType<Test> {
+    configure<JacocoTaskExtension> {
+        isIncludeNoLocationClasses = true
+    }
+    configure<JacocoTaskExtension> {
+        excludes = listOf("jdk.internal.*")
+    }
+}
+
 
 android {
     namespace = "com.example.practicaljetpackcompose"
     compileSdk = 33
+
+    applicationVariants.all(closureOf<com.android.build.gradle.api.ApplicationVariant> {
+        val testTaskName = "test${this@closureOf.name.capitalize()}UnitTest"
+
+        val excludes = listOf(
+            // Android
+            "**/R.class",
+            "**/R\$*.class",
+            "**/BuildConfig.*",
+            "**/Manifest*.*",
+            "**/*theme.*",
+        )
+
+        val reportTask = tasks.register("jacoco${testTaskName.capitalize()}Report", JacocoReport::class) {
+            group = "Reporting"
+            description = "Generate Jacoco coverage reports for the ${testTaskName.capitalize()}} build."
+
+            dependsOn(testTaskName)
+
+            reports {
+                xml.required.set(true)
+                html.required.set(true)
+            }
+
+            classDirectories.setFrom(
+                files(
+                    fileTree(this@closureOf.javaCompileProvider.get().destinationDir) {
+                        exclude(excludes)
+                    },
+                    fileTree("$buildDir/tmp/kotlin-classes/${this@closureOf.name}") {
+                        exclude(excludes)
+                    }
+                )
+            )
+
+            // Code underneath /src/{variant}/kotlin will also be picked up here
+            sourceDirectories.setFrom(this@closureOf.sourceSets.flatMap { it.javaDirectories })
+            executionData.setFrom(file("$buildDir/jacoco/$testTaskName.exec"))
+        }
+
+        jacocoTestReport.dependsOn(reportTask)
+    })
 
     val properties = Properties().apply {
         load(project.rootProject.file("local.properties").inputStream())
