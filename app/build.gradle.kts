@@ -33,7 +33,7 @@ android {
             "**/R\$*.class",
             "**/BuildConfig.*",
             "**/Manifest*.*",
-            "**/*theme.*",
+            "**/ui/theme/*",
         )
 
         val reportTask = tasks.register("jacoco${testTaskName.capitalize()}Report", JacocoReport::class) {
