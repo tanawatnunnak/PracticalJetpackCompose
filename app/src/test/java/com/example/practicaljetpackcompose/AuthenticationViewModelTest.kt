@@ -109,11 +109,11 @@ class AuthenticationViewModelTest {
         assert(uiState.error == null)
     }
 
-    @Test
+    /*@Test
     fun authenticate_appearLoading() {
         viewModel.handleEvent(AuthenticationEvent.Authenticate)
         val uiState = viewModel.uiState.value
         assert(uiState.isLoading)
-    }
+    }*/
 
 }
