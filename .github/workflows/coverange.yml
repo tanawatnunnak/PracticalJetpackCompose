@@ -1,4 +1,4 @@
-name: Measure coverage
+name: Code coverage
 
 on:
   pull_request:
@@ -32,3 +32,6 @@ jobs:
           token: ${{ secrets.TOKEN }}
           min-coverage-overall: 40
           min-coverage-changed-files: 60
+          title: Code Coverage
+          update-comment: true
+
