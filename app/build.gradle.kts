@@ -1,5 +1,5 @@
-import org.jetbrains.kotlin.konan.properties.Properties
 import com.android.build.gradle.internal.tasks.factory.dependsOn
+import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     id("com.android.application")
@@ -66,25 +66,16 @@ android {
         jacocoTestReport.dependsOn(reportTask)
     })
 
-    /*val properties = Properties().apply {
+    val properties = Properties().apply {
         load(project.rootProject.file("local.properties").inputStream())
-    }*/
+    }
 
     signingConfigs {
         create("release") {
-            storeFile = file("../keystore/compose_practical_keystore.jks")
-            storePassword = "T@nawat!26"
-            keyAlias = "ComposePractical"
-            keyPassword = "T@nawat!26"
-            storeFile = file("../keystore/compose_practical_keystore.jks")
-            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
-            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
-            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
-            /*storeFile = file(properties.getProperty("keystore_path"))
+            storeFile = file(properties.getProperty("keystore_path"))
             storePassword = properties.getProperty("keystore_password")
             keyAlias = properties.getProperty("keystore_key_alias")
             keyPassword = properties.getProperty("keystore_key_password")
-            */
         }
     }
 
