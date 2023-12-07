@@ -1,5 +1,5 @@
-import org.jetbrains.kotlin.konan.properties.Properties
 import com.android.build.gradle.internal.tasks.factory.dependsOn
+import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     id("com.android.application")
@@ -33,7 +33,7 @@ android {
             "**/R\$*.class",
             "**/BuildConfig.*",
             "**/Manifest*.*",
-            "**/*theme.*",
+            "**/ui/theme/*",
         )
 
         val reportTask = tasks.register("jacoco${testTaskName.capitalize()}Report", JacocoReport::class) {
@@ -66,24 +66,16 @@ android {
         jacocoTestReport.dependsOn(reportTask)
     })
 
-    /*val properties = Properties().apply {
+    val properties = Properties().apply {
         load(project.rootProject.file("local.properties").inputStream())
-    }*/
+    }
 
     signingConfigs {
         create("release") {
-            storeFile = file("../keystore/compose_practical_keystore.jks")
-            storePassword = "T@nawat!26"
-            keyAlias = "ComposePractical"
-            keyPassword = "T@nawat!26"
-            storeFile = file("../keystore/compose_practical_keystore.jks")
-            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
-            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
-            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
-            /*storeFile = file(properties.getProperty("keystore_path"))
+            storeFile = file(properties.getProperty("keystore_path"))
             storePassword = properties.getProperty("keystore_password")
             keyAlias = properties.getProperty("keystore_key_alias")
-            keyPassword = properties.getProperty("keystore_key_password")*/
+            keyPassword = properties.getProperty("keystore_key_password")
         }
     }
 
@@ -155,8 +147,11 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
-    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    testImplementation("android.arch.core:core-testing:1.1.1")
+
 
 
 }
