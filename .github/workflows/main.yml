@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   build:
-
+    name: unit test
     runs-on: ubuntu-latest
 
     steps:
